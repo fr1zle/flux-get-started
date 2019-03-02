@@ -16,6 +16,5 @@ spec:
   values: 
     gw:
       enabled: true
-    brigade-github-oauth:
       service:
         type: ClusterIP

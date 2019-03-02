@@ -14,6 +14,8 @@ spec:
     name: brigade
     version: 0.21.0
   values: 
+    gw:
+      enabled: true
     brigade-github-oauth:
       service:
         type: ClusterIP

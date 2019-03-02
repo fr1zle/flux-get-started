@@ -10,7 +10,7 @@ metadata:
 spec:
   releaseName: brigade
   chart:
-    repository: https://azure.github.io/brigade-charts
+    repository: https://azure.github.io/brigade-charts/
     name: brigade
     version: 0.20.0
   values: {}

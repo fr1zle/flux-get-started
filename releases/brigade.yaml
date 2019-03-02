@@ -12,7 +12,7 @@ spec:
   chart:
     repository: https://azure.github.io/brigade-charts/
     name: brigade
-    version: 0.20.0
+    version: 0.21.0
   values: 
     brigade-github-oauth:
       service:

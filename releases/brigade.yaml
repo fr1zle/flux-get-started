@@ -10,7 +10,10 @@ metadata:
 spec:
   releaseName: brigade
   chart:
-    repository: https://azure.github.io/
-    name: brigade-charts/brigade
+    repository: https://azure.github.io/brigade-charts/
+    name: brigade
     version: 0.20.0
-  values: {}
+  values: 
+    brigade-github-oauth:
+      service:
+        type: ClusterIP

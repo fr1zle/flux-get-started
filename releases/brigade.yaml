@@ -1,0 +1,16 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: brigade
+  namespace: brig
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.chart-image: semver:~0
+spec:
+  releaseName: brigade
+  chart:
+    repository: https://azure.github.io/brigade-charts
+    name: brigade
+    version: 0.20.0
+  values:

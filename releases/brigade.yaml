@@ -19,4 +19,6 @@ spec:
       service:
         type: ClusterIP
 
-        
+      ingress:
+        enabled: true
+        hosts: ['brigade-events.br0tbox.de']

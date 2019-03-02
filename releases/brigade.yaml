@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: brigade
-  namespace: brig
+  namespace: brigade
   annotations:
     flux.weave.works/automated: "true"
     flux.weave.works/tag.chart-image: semver:~0

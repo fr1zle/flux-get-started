@@ -19,9 +19,9 @@ spec:
       Ingress: 
         ApiVersion: extensions/v1beta1
         Annotations: 
-          - kubernetes.io/ingress.class: "nginx"    
-          - certmanager.k8s.io/issuer: "letsencrypt-staging"
-          - certmanager.k8s.io/acme-challenge-type: http01
+          kubernetes.io/ingress.class: "nginx"    
+          certmanager.k8s.io/issuer: "letsencrypt-staging"
+          certmanager.k8s.io/acme-challenge-type: http01
         TLS:
           - hosts:
             - example.example.com

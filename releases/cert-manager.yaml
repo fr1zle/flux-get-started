@@ -13,3 +13,4 @@ spec:
     repository: https://kubernetes-charts.storage.googleapis.com/
     name: cert-manager
     version: v0.6.6
+  values: {}

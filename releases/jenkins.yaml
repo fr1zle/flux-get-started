@@ -24,6 +24,6 @@ spec:
           certmanager.k8s.io/acme-challenge-type: http01
         TLS:
           - hosts:
-            - example.example.com
+            - jenkins.br0tbox.de
             secretName: jenkins-tls
       ServiceType: ClusterIP

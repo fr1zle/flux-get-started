@@ -1,0 +1,15 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: gibbons-system
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.chart-image: semver:~v0.6
+spec:
+  releaseName: cert-manager
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    name: cert-manager
+    version: v0.6.6

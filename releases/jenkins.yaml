@@ -25,5 +25,7 @@ spec:
         TLS:
           - hosts:
             - jenkins.br0tbox.de
-            secretName: jenkins-tls
+            secretName: jenkins-cert-tls-1
       ServiceType: ClusterIP
+    rbac:
+      install: true

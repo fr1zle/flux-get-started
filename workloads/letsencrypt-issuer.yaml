@@ -2,6 +2,7 @@
    kind: Issuer
    metadata:
      name: letsencrypt-prod
+     namespace: gibbons-system
    spec:
      acme:
        # The ACME server URL

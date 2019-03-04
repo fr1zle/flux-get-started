@@ -3,7 +3,7 @@ apiVersion: flux.weave.works/v1beta1
 kind: HelmRelease
 metadata:
   name: cert-manager
-  namespace: gibbons-system
+  namespace: cert-manager
   annotations:
     flux.weave.works/automated: "false"
     flux.weave.works/tag.chart-image: semver:~v0.6

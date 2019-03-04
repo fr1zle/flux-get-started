@@ -8,6 +8,7 @@ metadata:
   labels:
     app: kashti
   name: kashti
+  namespace: brigade
 spec:
   rules:
   - host: kashti.dev.br0tbox.de

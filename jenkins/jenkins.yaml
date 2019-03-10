@@ -37,17 +37,17 @@ spec:
           valueFrom:
             secretKeyRef:
               name: jenkins-secret
-              key: JENKINS_OAUTH_CLIENT_ID
+              key: JENKINS_OAUTH_CLIENT_SECRET
         - name: DOCKERHUB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: jenkins-secret
-              key: JENKINS_OAUTH_CLIENT_ID
+              key: DOCKERHUB_PASSWORD
         - name: JENKINS_GITHUB_TOKEN
           valueFrom:
             secretKeyRef:
               name: jenkins-secret
-              key: JENKINS_OAUTH_CLIENT_ID
+              key: JENKINS_GITHUB_TOKEN
       InstallPlugins:
         - kubernetes:1.14.0
         - kubernetes-cli:1.6.0

@@ -1,0 +1,233 @@
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: jenkins
+  namespace: gibbons-system
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: jenkins
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    name: jenkins
+    version: 0.33.0
+  values:
+    Master:
+      UseSecurity: true
+      HostName: jenkins.br0tbox.de
+      Ingress:
+        ApiVersion: extensions/v1beta1
+        Annotations:
+          kubernetes.io/ingress.class: "nginx"
+          certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
+          certmanager.k8s.io/acme-challenge-type: http01
+        TLS:
+          - hosts:
+              - jenkins.br0tbox.de
+            secretName: jenkins-cert-tls-1
+      ServiceType: ClusterIP
+      ContainerEnv:
+        - name: JENKINS_OAUTH_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: jenkins-secret
+              key: JENKINS_OAUTH_CLIENT_ID
+        - name: JENKINS_OAUTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jenkins-secret
+              key: JENKINS_OAUTH_CLIENT_ID
+        - name: DOCKERHUB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: jenkins-secret
+              key: JENKINS_OAUTH_CLIENT_ID
+        - name: JENKINS_GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: jenkins-secret
+              key: JENKINS_OAUTH_CLIENT_ID
+      InstallPlugins:
+        - kubernetes:1.14.0
+        - kubernetes-cli:1.6.0
+        - workflow-aggregator:2.6
+        - workflow-job:2.31
+        - credentials-binding:1.17
+        - git:3.9.1
+        - blueocean:1.13.1
+        - github-oauth:0.31
+        - github-pullrequest:0.2.4
+        - configuration-as-code:1.7
+        - configuration-as-code-support:1.7
+      JCasC:
+        ConfigScripts:
+          config: |
+            plugins:
+              sites:
+              - id: "default"
+                url: "https://updates.jenkins.io/update-center.json"
+            jenkins:
+              authorizationStrategy:
+                github:
+                  adminUserNames: "fr1zle"
+                  allowAnonymousJobStatusPermission: false
+                  allowAnonymousReadPermission: false
+                  allowCcTrayPermission: false
+                  allowGithubWebHookPermission: false
+                  authenticatedUserCreateJobPermission: false
+                  authenticatedUserReadPermission: true
+                  organizationNames: "Br0tbox"
+                  useRepositoryPermissions: true
+              clouds:
+              - kubernetes:
+                  containerCapStr: "10"
+                  jenkinsTunnel: "jenkins-agent:50000"
+                  jenkinsUrl: "http://jenkins:8080"
+                  maxRequestsPerHostStr: "32"
+                  name: "kubernetes"
+                  namespace: "gibbons-system"
+                  serverUrl: "https://kubernetes.default"
+                  templates:
+                  - containers:
+                    - args: "${computer.jnlpmac} ${computer.name}"
+                      envVars:
+                      - containerEnvVar:
+                          key: "JENKINS_URL"
+                          value: "http://jenkins:8080"
+                      image: "jenkins/jnlp-slave:3.27-1"
+                      livenessProbe:
+                        failureThreshold: 0
+                        initialDelaySeconds: 0
+                        periodSeconds: 0
+                        successThreshold: 0
+                        timeoutSeconds: 0
+                      name: "jnlp"
+                      resourceLimitCpu: "200m"
+                      resourceLimitMemory: "256Mi"
+                      resourceRequestCpu: "200m"
+                      resourceRequestMemory: "256Mi"
+                    - alwaysPullImage: true
+                      args: "cat"
+                      command: "/bin/sh -c"
+                      image: "openjdk:11.0.2-jdk-slim-stretch"
+                      livenessProbe:
+                        failureThreshold: 0
+                        initialDelaySeconds: 0
+                        periodSeconds: 0
+                        successThreshold: 0
+                        timeoutSeconds: 0
+                      name: "openjdk-11"
+                      ttyEnabled: true
+                    - args: "cat"
+                      command: "/bin/sh -c"
+                      image: "docker:18.09.3-dind"
+                      livenessProbe:
+                        failureThreshold: 0
+                        initialDelaySeconds: 0
+                        periodSeconds: 0
+                        successThreshold: 0
+                        timeoutSeconds: 0
+                      name: "docker"
+                      privileged: true
+                      ttyEnabled: true
+                    label: "build"
+                    name: "jenkins-build-agent"
+                    namespace: "gibbons-system"
+                    nodeUsageMode: "NORMAL"
+                    serviceAccount: "jenkins"
+                    volumes:
+                    - hostPathVolume:
+                        hostPath: "/var/run/docker.sock"
+                        mountPath: "/var/run/docker.sock"
+                    workspaceVolume:
+                      emptyDirWorkspaceVolume:
+                        memory: false
+                  - containers:
+                    - args: "cat"
+                      command: "/bin/sh -c"
+                      envVars:
+                      - envVar:
+                          key: "KUBE_API_SERVER"
+                          value: "https://b1f9b7d8-dc61-4173-8dc9-c431490dcd16.k8s.ondigitalocean.com"
+                      image: "lachlanevenson/k8s-kubectl:v1.13.4"
+                      livenessProbe:
+                        failureThreshold: 0
+                        initialDelaySeconds: 0
+                        periodSeconds: 0
+                        successThreshold: 0
+                        timeoutSeconds: 0
+                      name: "kubectl"
+                      resourceRequestCpu: "20m"
+                      resourceRequestMemory: "100Mi"
+                      ttyEnabled: true
+                    envVars:
+                    - envVar:
+                        key: "KUBE_API_SERVER"
+                        value: "https://b1f9b7d8-dc61-4173-8dc9-c431490dcd16.k8s.ondigitalocean.com"
+                    label: "deploy"
+                    name: "jenkins-deploy-agent"
+                    namespace: "gibbons-system"
+                    nodeUsageMode: "NORMAL"
+                    serviceAccount: "jenkins"
+                    workspaceVolume:
+                      emptyDirWorkspaceVolume:
+                        memory: false
+              crumbIssuer:
+                standard:
+                  excludeClientIPFromCrumb: true
+              disableRememberMe: false
+              mode: NORMAL
+              numExecutors: 0
+              primaryView:
+                all:
+                  name: "all"
+              quietPeriod: 5
+              scmCheckoutRetryCount: 0
+              securityRealm:
+                github:
+                  clientID: ${JENKINS_OAUTH_CLIENT_ID}
+                  clientSecret: ${JENKINS_OAUTH_CLIENT_SECRET}
+                  githubApiUri: "https://api.github.com"
+                  githubWebUri: "https://github.com"
+                  oauthScopes: "read:org,user:email,repo"
+              slaveAgentPort: 50000
+              views:
+              - all:
+                  name: "all"
+            credentials:
+              system:
+                domainCredentials:
+                - credentials:
+                  - string:
+                      id: "jenkins-hooks"
+                      scope: GLOBAL
+                      secret: ${JENKINS_GITHUB_TOKEN}
+                  - usernamePassword:
+                      id: "dockerhub"
+                      password: ${DOCKERHUB_PASSWORD}
+                      scope: GLOBAL
+                      username: "fr1zle"
+            security:
+              remotingCLI:
+                enabled: false
+            unclassified:
+              gitHubPluginConfig:
+                configs:
+                - credentialsId: "jenkins-hooks"
+                  name: "Github"
+              location:
+                url: "https://jenkins.br0tbox.de/"
+            tool:
+              git:
+                installations:
+                - home: "git"
+                  name: "Default"
+              jdk:
+                defaultProperties:
+                - installSource:
+                    installers:
+                    - jdkInstaller:
+                        acceptLicense: false
+    rbac:
+      install: true

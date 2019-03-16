@@ -61,6 +61,7 @@ spec:
         - configuration-as-code:1.7
         - configuration-as-code-support:1.7
       JCasC:
+        enabled: true
         ConfigScripts:
           config: |
             plugins:

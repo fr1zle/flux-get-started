@@ -49,13 +49,13 @@ spec:
               name: jenkins-secret
               key: JENKINS_GITHUB_TOKEN
       InstallPlugins:
-        - kubernetes:1.14.0
+        - kubernetes:1.14.8
         - kubernetes-cli:1.6.0
         - workflow-aggregator:2.6
         - workflow-job:2.31
-        - credentials-binding:1.17
-        - git:3.9.1
-        - blueocean:1.13.1
+        - credentials-binding:1.18
+        - git:3.9.3
+        - blueocean:1.13.2
         - github-oauth:0.31
         - github-pullrequest:0.2.4
         - configuration-as-code:1.7
@@ -151,7 +151,7 @@ spec:
                       envVars:
                       - envVar:
                           key: "KUBE_API_SERVER"
-                          value: "https://b1f9b7d8-dc61-4173-8dc9-c431490dcd16.k8s.ondigitalocean.com"
+                          value: "https://c4995c1a-9bb2-4569-8c08-ecd6ca55449f.k8s.ondigitalocean.com"
                       image: "lachlanevenson/k8s-kubectl:v1.13.4"
                       livenessProbe:
                         failureThreshold: 0
@@ -166,7 +166,7 @@ spec:
                     envVars:
                     - envVar:
                         key: "KUBE_API_SERVER"
-                        value: "https://b1f9b7d8-dc61-4173-8dc9-c431490dcd16.k8s.ondigitalocean.com"
+                        value: "https://c4995c1a-9bb2-4569-8c08-ecd6ca55449f.k8s.ondigitalocean.com"
                     label: "deploy"
                     name: "jenkins-deploy-agent"
                     namespace: "gibbons-system"

@@ -48,6 +48,11 @@ spec:
             secretKeyRef:
               name: jenkins-secret
               key: JENKINS_GITHUB_TOKEN
+        - name: JENKINS_SA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: jenkins-secret
+              key: JENKINS_SA_TOKEN
       InstallPlugins:
         - kubernetes:1.14.8
         - kubernetes-cli:1.6.0
@@ -205,6 +210,10 @@ spec:
                       id: "jenkins-hooks"
                       scope: GLOBAL
                       secret: ${JENKINS_GITHUB_TOKEN}
+                  - string:
+                      id: "jenkins-sa-token"
+                      scope: GLOBAL
+                      secret: ${JENKINS_SA_TOKEN}
                   - usernamePassword:
                       id: "dockerhub"
                       password: ${DOCKERHUB_PASSWORD}

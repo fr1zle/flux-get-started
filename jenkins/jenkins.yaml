@@ -224,11 +224,5 @@ spec:
                 installations:
                 - home: "git"
                   name: "Default"
-              jdk:
-                defaultProperties:
-                - installSource:
-                    installers:
-                    - jdkInstaller:
-                        acceptLicense: false
     rbac:
       install: true
